@@ -1,0 +1,1 @@
+# luxonis-scraping-test-task
