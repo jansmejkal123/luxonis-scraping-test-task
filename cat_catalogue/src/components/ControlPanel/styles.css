@@ -1,0 +1,16 @@
+.control-panel {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 1em 30%;
+    align-items: center;
+}
+
+.control-panel button {
+    width: 100px;
+}
+
+.control-panel button:disabled {
+    color: white;
+    background-color: gray;
+}

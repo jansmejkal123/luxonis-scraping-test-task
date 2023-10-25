@@ -1,0 +1,12 @@
+.gallery-wrapper {
+    min-width: 1280px;
+    display: block;
+    border: 5px solid black;
+}
+.gallery {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap: 5px;
+    background: black;
+    width: 100%;
+}
