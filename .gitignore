@@ -5,4 +5,5 @@
 /*/prisma
 .env
 .env.vite
+.env.db
 /*/dist

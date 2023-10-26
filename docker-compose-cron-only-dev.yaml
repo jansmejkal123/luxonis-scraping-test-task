@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  cron:
+    platform: linux/x86_64
+    build:
+      context: ./cron
+      dockerfile: Dockerfile-dev
+    container_name: cron
+    image: cron
+    restart: always
+    env_file:
+      - .env.db
+    networks:
+      - app-network
+    ports:
+      - "3000:3000"
+    volumes:
+      - type: bind
+        source: ./cron/src
+        target: /app/src
+
+networks:
+  app-network:
+    driver: bridge

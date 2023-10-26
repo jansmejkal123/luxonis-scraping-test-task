@@ -1,0 +1,20 @@
+FROM node:slim as base
+
+WORKDIR /app
+
+# Add package file
+COPY package*.json ./
+
+# Install deps
+RUN npm ci
+
+# Copy source
+COPY src ./src
+COPY tsconfig.json ./tsconfig.json
+
+RUN npm run build
+
+# Expose main port
+EXPOSE 3000
+
+CMD ["npm", "run", "start"]
