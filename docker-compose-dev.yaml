@@ -37,8 +37,11 @@ services:
       - type: bind
         source: ./cron/src
         target: /src
+      - type: bind
+        source: ./cron/prisma
+        target: /prisma
     depends_on:
-      postgres2:
+      postgres:
         condition: service_healthy
 
 networks:

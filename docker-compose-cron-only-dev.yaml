@@ -19,6 +19,9 @@ services:
       - type: bind
         source: ./cron/src
         target: /app/src
+      - type: bind
+        source: ./cron/prisma
+        target: /app/prisma
 
 networks:
   app-network:
