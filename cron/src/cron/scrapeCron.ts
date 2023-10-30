@@ -3,10 +3,10 @@ import {CatData, Scraper} from "../types";
 import {updateData} from "../utils/db";
 
 
-const startScheduledScraping = (domain: string, port: number, scrapeFn: Scraper<CatData>) => {
+const startScheduledScraping = (scrapeFn: Scraper<CatData>, domain: string, path: string, port?: number) => {
    return new CronJob('0 */10 * * * *', async () => {
         console.log(`Scraping (${new Date().toLocaleTimeString()})`);
-        const data = await scrapeFn(domain, port);
+        const data = await scrapeFn(domain, path, port);
         await updateData(data)
     }, ()=> {console.log('scraping complete');
 
