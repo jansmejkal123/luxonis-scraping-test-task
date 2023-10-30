@@ -1,0 +1,28 @@
+{
+  "name": "cron",
+  "version": "1.0.0",
+  "description": "a service to scrape and save the data",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "npx tsc",
+    "start": "npx prisma migrate && node dist/index.js",
+    "dev": "npx prisma migrate reset --force && nodemon --watch './src/**/*.ts' --exec 'ts-node' src/index.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^5.5.2",
+    "cron": "^3.1.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "puppeteer": "^21.4.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.19",
+    "@types/node": "^20.8.6",
+    "nodemon": "^3.0.1",
+    "prisma": "^5.5.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  }
+}

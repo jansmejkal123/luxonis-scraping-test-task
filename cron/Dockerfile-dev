@@ -1,0 +1,33 @@
+FROM node:slim as base
+
+# We don't need the standalone Chromium
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome
+
+# Install Google Chrome
+# Note: this installs the necessary libs to make the browser work with Puppeteer.
+RUN apt-get update && apt-get install gnupg wget -y && \
+    wget --quiet --output-document=- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /etc/apt/trusted.gpg.d/google-archive.gpg && \
+    sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' && \
+    apt-get update --allow-releaseinfo-change && \
+    apt-get install google-chrome-stable -y --no-install-recommends && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Add package file
+COPY package*.json ./
+
+# Install deps
+RUN npm ci
+
+# Copy source
+COPY src ./src
+COPY prisma ./prisma
+
+COPY tsconfig.json ./tsconfig.json
+
+# Expose main port
+EXPOSE 3000
+
+CMD ["npm", "run", "dev"]

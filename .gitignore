@@ -2,7 +2,8 @@
 .DS_Store
 
 /*/node_modules
-/*/prisma
 .env
+.env.cron
+.env.db
 .env.vite
 /*/dist
