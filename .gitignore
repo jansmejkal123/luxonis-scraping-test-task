@@ -3,6 +3,7 @@
 
 /*/node_modules
 .env
-.env.vite
+.env.cron
 .env.db
+.env.vite
 /*/dist
