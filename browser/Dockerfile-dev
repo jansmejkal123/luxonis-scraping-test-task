@@ -1,0 +1,21 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY cron/prisma ./prisma
+COPY browser/package*.json ./
+COPY browser/next.config.mjs ./
+COPY browser/tsconfig.json ./
+COPY browser/tailwind.config.ts ./
+COPY browser/postcss.config.cjs ./
+
+COPY browser/src ./src
+COPY browser/public ./public
+
+RUN npm ci
+
+ENV NODE_ENV development
+
+EXPOSE 3000
+
+CMD ["npm", "run", "dev"]
