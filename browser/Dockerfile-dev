@@ -13,6 +13,7 @@ COPY browser/src ./src
 COPY browser/public ./public
 
 RUN npm ci
+RUN npx prisma generate
 
 ENV NODE_ENV development
 

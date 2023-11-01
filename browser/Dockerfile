@@ -12,6 +12,7 @@ COPY browser/tailwind.config.ts ./
 COPY browser/postcss.config.cjs ./
 
 RUN npm ci
+RUN prisma generate
 
 ##### BUILDER
 
@@ -23,8 +24,6 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY browser/ .
 
 # ENV NEXT_TELEMETRY_DISABLED 1
-
-RUN echo ls
 
 RUN \
   if [ -f package-lock.json ]; then SKIP_ENV_VALIDATION=1 npm run build; \
