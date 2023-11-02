@@ -1,4 +1,4 @@
-import {catRouter} from "~/server/api/routers/post";
+import {catRouter} from "~/server/api/routers/cat";
 import {createTRPCRouter} from "~/server/api/trpc";
 
 /**
