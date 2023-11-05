@@ -14,7 +14,6 @@ export const env = createEnv({
       .url()
       .refine(
         (str) => {
-          console.log('debug: string', str)
           return str && !!str.includes("postgres")
         },
         "You forgot to change the default URL"

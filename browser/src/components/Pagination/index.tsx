@@ -1,25 +1,25 @@
 import React, {type FunctionComponent, useMemo} from 'react';
+import {usePaginationContext} from "~/contexts/paginationContext";
 
-export type PaginationHandler = (dir: 'prev' | 'next') => void
+export type PaginationDirection = 'prev' | 'next';
 
-interface OwnProps {
-    paginationHandler: PaginationHandler,
-    totalCount?: number,
-    perPage: number,
-    page: number
-}
+export type PaginationHandler = (dir: PaginationDirection) => void
 
-type Props = OwnProps;
+type Props = object;
 
-const Pagination: FunctionComponent<Props> = ({paginationHandler, page, perPage, totalCount = 0}) => {
+const Pagination: FunctionComponent<Props> = () => {
+    const {page, perPage, totalCount, handlePagination, pageDisplayValue} = usePaginationContext();
+
     const disabledNext = useMemo(() => {
-        console.log('debug: calculating')
         return page * perPage >= totalCount - perPage
     },[page, perPage, totalCount]);
+
     const disabledPrev = useMemo(() => page <= 0,[page]);
+
     return (<div>
-        <button disabled={disabledPrev} onClick={() => paginationHandler('prev')}>Prev Page</button>
-        <button disabled={disabledNext} onClick={() => paginationHandler('next')}>Next Page</button>
+        <button disabled={disabledPrev} onClick={() => handlePagination('prev')}>Prev Page</button>
+        {pageDisplayValue}/{totalCount/perPage}
+        <button disabled={disabledNext} onClick={() => handlePagination('next')}>Next Page</button>
     </div>);
 };
 
