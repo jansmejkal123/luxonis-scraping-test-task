@@ -14,10 +14,11 @@ const Gallery = () => {
             setTotalCount(totalCount)
         }
     },[CatsQuery.data])
-    return (<div>
-                <Pagination />
-        <GalleryItems data={CatsQuery.data} />
 
+    return (<div>
+        <Pagination />
+        {CatsQuery.isLoading && <div className="flex flex-grow text-center text-lg text-gray-50">Loading...</div> }
+        {CatsQuery.data && <GalleryItems data={CatsQuery.data} />}
     </div>);
 }
 

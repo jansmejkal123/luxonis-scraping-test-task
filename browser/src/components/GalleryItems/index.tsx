@@ -1,31 +1,38 @@
-import React, {type FunctionComponent} from 'react';
+import React, {type FunctionComponent, useMemo} from 'react';
+import GalleryItem from "~/components/GalleryItem";
+import {type RouterOutputs} from "~/utils/api";
 
-import type {inferRouterOutputs} from '@trpc/server';
-import type {AppRouter} from "~/server/api/root";
-import Image from "next/image";
+export type CatGetQueryType = RouterOutputs['cat']['get'];
+export type PlaceholderItem = {
+    imgURL: '/copycat.jpeg';
+    alt: '@otecfura: Copycat';
+}
+export type RealItem = CatGetQueryType['cats'][0];
 
-type RouterOutput = inferRouterOutputs<AppRouter>;
-
-type CatGetQueryType = RouterOutput['cat']['get'] | undefined;
+type GridColsCount = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12
+type Props = OwnProps;
 
 interface OwnProps {
     data: CatGetQueryType;
 }
 
-type Props = OwnProps;
-
 const GalleryItems: FunctionComponent<Props> = ({data}) => {
-    if (!data) {
-        return null;
+    const columnsCount: GridColsCount = 4
+    const fillerItems = useMemo(() => {
+        return new Array(columnsCount - data.cats.length % columnsCount).fill(null).map((_, ) => {
+           return  {
+               imgURL: '/copycat.jpeg',
+               alt: '@otecfura: Copycat'
+           } as PlaceholderItem;
+        })
+    }, [data])
+    if (data.cats.length === 0) {
+        return (<p className="text-white font-mono font-bold mt-5">no cats to display. try adjusting page or per page count. happy viewing!</p>)
     }
   return (<>
-      {data && (<div className="grid grid-cols-4 gap-1 bg-white border-white border-4">
-          {data.cats.map((cat, index) => <div className="flex flex-col bg-black justify-between" key={index}>
-              <div className="">
-                  <Image unoptimized loader={() => cat.imgURL}  src={cat.imgURL} alt={cat.breed} width={300} height={300} className="object-cover aspect-square" />
-              </div>
-              <h2 className="text-white text-center">{cat.breed}</h2>
-          </div>)}
+      {(<div className={`grid grid-cols-${columnsCount} gap-1 bg-white border-white border-4`}>
+          {data.cats.map((cat) => <GalleryItem item={cat} key={cat.id}/>)}
+          {fillerItems.map((item, i) => <GalleryItem item={item} key={`placeholder_${i}`}/>)}
       </div>)}
   </>);
 };
