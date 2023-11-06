@@ -1,10 +1,9 @@
-import {createContext, useCallback, useContext, useEffect, useMemo, useState} from "react";
+import {createContext, type ReactNode, useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {useRouter} from "next/router";
-import {type PaginationHandler} from "~/components/Pagination";
-import {type SetPerPageHandler} from "~/components/PerPageDropDown";
+import {type PaginationHandler, type SetPerPageHandler} from "~/types";
 
 type PaginationContextProviderProps = {
-    children: React.ReactNode
+    children: ReactNode
 }
 
 type PaginationContext = {
@@ -24,7 +23,7 @@ const PaginationContext = createContext<PaginationContext | null>(null);
 const PaginationContextProvider = ({children}: PaginationContextProviderProps) => {
     const {query, replace} = useRouter();
     const [page, setPage] = useState((Number(query?.page) && !(Number(query?.page) < 0)) ? Number(query.page) : 0)
-    const [perPage, setPerPage] = useState(Number(query?.perPage)  && !(Number(query?.perPage) < 1) ? Number(query.perPage) : 1);
+    const [perPage, setPerPage] = useState(Number(query?.perPage)  && !(Number(query?.perPage) < 1) ? Number(query.perPage) : 8);
     const [totalCount, setTotalCount] = useState(0)
     const pageDisplayValue = useMemo(() => {
         return page + 1

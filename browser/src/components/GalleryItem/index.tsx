@@ -1,24 +1,43 @@
-import React, {type FunctionComponent} from 'react';
+import React, {type FunctionComponent, useMemo} from 'react';
 import Image from "next/image";
-import type {PlaceholderItem, RealItem} from "~/components/GalleryItems";
+import type {PlaceholderGalleryItem, RealGalleryItem} from "~/types";
 
 
 interface OwnProps {
-    item: RealItem | PlaceholderItem;
+    item: RealGalleryItem | PlaceholderGalleryItem;
 }
 
 type Props = OwnProps;
 
 const GalleryItem: FunctionComponent<Props> = ({item}) => {
-    const title = !Object.hasOwn(item, 'breed') ? (item as PlaceholderItem).alt : (item as RealItem).breed;
-    const alt = !Object.hasOwn(item, 'breed') ? (item as PlaceholderItem).alt : (item as RealItem).breed;
+    const isPlaceholder = useMemo(() => !Object.hasOwn(item, 'breed'), []);
+    const title = !isPlaceholder ?
+        (item as RealGalleryItem).breed :
+        `${(item as PlaceholderGalleryItem).profileName}: ${(item as PlaceholderGalleryItem).title}`;
 
     return (<div className="flex flex-col bg-black justify-between">
-        <div>
-            <Image unoptimized loader={() => item.imgURL} src={item.imgURL} alt={alt} width={300} height={300}
-                   className="object-cover aspect-square"/>
+        <div className="aspect-square">
+            <Image unoptimized loader={() => item.imgURL} src={item.imgURL} alt={title} width={300} height={300}
+                   className="object-cover "/>
         </div>
-        <h2 className="text-white text-center">{title}</h2>
+        <p className="text-white text-center">{
+           !isPlaceholder ?
+               title :
+               (<>
+                   <a href={(item as PlaceholderGalleryItem).profileLink}
+                      className="underline"
+                      target="_blank"
+                      rel="noopener">
+                       {(item as PlaceholderGalleryItem).profileName}
+                   </a>:
+                   <a href={(item as PlaceholderGalleryItem).link}
+                      className="underline"
+                      target="_blank"
+                      rel="noopener">
+                       {(item as PlaceholderGalleryItem).title}
+                   </a>
+               </>)
+        }</p>
     </div>);
 };
 
