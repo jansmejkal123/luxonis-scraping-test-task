@@ -17,6 +17,23 @@ services:
       interval: 10s
       timeout: 3s
       retries: 3
+  browser:
+    build:
+      context: .
+      dockerfile: ./browser/Dockerfile-dev
+    env_file:
+      - .env.db
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      app-network:
+    ports:
+      - "8080:3000"
+    volumes:
+      - type: bind
+        source: ./browser/src
+        target: /app/src
 
 networks:
   app-network:

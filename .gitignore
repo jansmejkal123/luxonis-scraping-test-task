@@ -6,4 +6,6 @@
 .env.cron
 .env.db
 .env.vite
+
 /*/dist
+/browser/prisma/
