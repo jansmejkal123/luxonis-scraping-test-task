@@ -20,7 +20,6 @@ const getTotalFillerCount = (data: CatGetQueryType, perPage: number, columnsCoun
 const GalleryItems: FunctionComponent<Props> = ({data}) => {
     const columnsCount: GridColsCount = 4;
     const {perPage} = usePaginationContext();
-    const gridColsClassName = useMemo(() => `grid-cols-${columnsCount}`,[])
     const fillerItems = useMemo(() => {
         const totalFillerCount = getTotalFillerCount(data, perPage, columnsCount);
 
@@ -43,7 +42,7 @@ const GalleryItems: FunctionComponent<Props> = ({data}) => {
 
     console.log('debug: totalFillerCount', fillerItems.length)
   return (<>
-      {(<div className={`grid ${gridColsClassName} gap-1 bg-white border-white border-4`}>
+      {(<div className={`grid grid-cols-1 lg:grid-cols-4 sm:grid-cols-2  gap-1 bg-white border-white border-4`}>
           {data.cats.map((cat) => <GalleryItem item={cat} key={cat.id}/>)}
           {fillerItems.map((item, i) => <GalleryItem item={item} key={`placeholder_${i}`}/>)}
       </div>)}
