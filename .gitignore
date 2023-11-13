@@ -5,7 +5,7 @@
 .env
 .env.cron
 .env.db
-.env.vite
+.env.cat_catalogue
 
 /*/dist
 /browser/prisma/

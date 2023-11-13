@@ -3,11 +3,14 @@ version: "3.9"
 services:
   cat_catalogue:
     build:
-      context: ./cat_catalogue
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: cat_catalogue/Dockerfile
     container_name: cat_catalogue
     restart: unless-stopped
-    env_file:
-      - .env.vite
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://cat_catalogue:3210"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
     ports:
-      - "3210:80"
+      - "3210:3210"

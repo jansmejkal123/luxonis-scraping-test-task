@@ -10,43 +10,51 @@ const scrapeCats: Scraper<CatData> = async (domain, path, port)  => {
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
-            '--disable-gpu'],
+            '--disable-gpu',
+            '--disable-web-security',
+            '--disable-features=IsolateOrigins',
+            '--disable-site-isolation-trials',
+            '--enable-features=NetworkService'],
         executablePath: process.env.PUPPETEER_EXECUTABLE_PATH
     });
-
-    // Create a page
-    const page = await browser.newPage();
-    await page.setCookie({
-        name: 'per_page',
-        value: '100',
-        domain: domain
-    })
-    console.log(`debug: going to ${URL}`)
-    // Go to site and wait for FE JS to load
-    await page.goto(URL, {
-        timeout: 40 * 1000,
-        waitUntil: ['networkidle0'],
-    });
-    // Set cookie to get as much data as possible for one call
-    await page.setCookie({
-        name: 'per_page',
-        value: '100',
-        domain: domain
-    })
-    // Wait for results, this can take a long while
-    await page.waitForNetworkIdle({idleTime: 1000, timeout: 40 * 1000})
-    // Extract data from page
-    const results: CatData[] = await page.$$eval('div.gallery > div.gallery-item', (items: HTMLDivElement[]) => {
-        return items.map(item => {
-            return {
-                breed: item.querySelector('h2')!.textContent!,
-                record_id: item.querySelector('p.description')!.textContent!,
-                imgURL: item.querySelector('img')!.src!,
-            }
+    try {
+        // Create a page
+        const page = await browser.newPage();
+        await page.setCookie({
+            name: 'per_page',
+            value: '100',
+            domain: domain
+        })
+        console.log(`debug: going to ${URL}`)
+        // Go to site and wait for FE JS to load
+        await page.goto(URL, {
+            timeout: 40 * 1000,
+            waitUntil: ['networkidle0'],
         });
-    });
-    console.log('debug: exiting', results)
-    return results;
+        // Set cookie to get as much data as possible for one call
+        await page.setCookie({
+            name: 'per_page',
+            value: '100',
+            domain: domain
+        })
+        // Wait for results, this can take a long while
+        await page.waitForNetworkIdle({idleTime: 1000, timeout: 40 * 1000})
+        // Extract data from page
+        const results: CatData[] = await page.$$eval('div.gallery > div.gallery-item', (items: HTMLDivElement[]) => {
+            return items.map(item => {
+                return {
+                    breed: item.querySelector('h2')!.textContent!,
+                    record_id: item.querySelector('p.description')!.textContent!,
+                    imgURL: item.querySelector('img')!.src!,
+                }
+            });
+        });
+        console.log('debug: exiting', results)
+        return results;
+    } catch (e) {
+        console.error(e);
+        return [];
+    }
 }
 
 export default scrapeCats

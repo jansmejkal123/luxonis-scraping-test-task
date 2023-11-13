@@ -6,6 +6,7 @@
   "scripts": {
     "build": "npx tsc",
     "start": "npx prisma migrate && node dist/index.js",
+    "postinstall": "npx prisma generate",
     "dev": "npx prisma migrate reset --force && nodemon --watch './src/**/*.ts' --exec 'ts-node' src/index.ts"
   },
   "author": "",

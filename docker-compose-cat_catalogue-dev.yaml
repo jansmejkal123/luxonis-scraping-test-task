@@ -7,8 +7,13 @@ services:
       dockerfile: Dockerfile-dev
     container_name: cat_catalogue
     restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://cat_catalogue:3210" ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
     env_file:
-      - .env.vite
+      - .env.cat_catalogue
     ports:
       - "3210:3210"
     volumes:

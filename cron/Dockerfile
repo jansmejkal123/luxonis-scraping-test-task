@@ -1,4 +1,4 @@
-FROM node:slim as base
+FROM --platform=linux/amd64 node:slim as base
 
 # We don't need the standalone Chromium
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
@@ -28,7 +28,7 @@ COPY tsconfig.json ./tsconfig.json
 COPY prisma ./prisma
 
 RUN npm run build
-RUN npx prisma generate
+RUN npm run postinstall
 # Expose main port
 EXPOSE 3000
 

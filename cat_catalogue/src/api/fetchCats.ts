@@ -1,9 +1,10 @@
 import {Cat} from "../types";
+
 export type FetchReturnType = {data: Cat[], nextPageAvailable: boolean}
 
 
 const apiEndpoint = `${import.meta.env.VITE_CAT_API_ENDPOINT}images/search/?`
-
+console.log('debug: apiEndpoint', apiEndpoint)
 const fetchCats = async (page = 0, limit: number = 4): Promise<FetchReturnType> => {
     const url = `${apiEndpoint + new URLSearchParams({
         order: 'DESC',
