@@ -40,7 +40,6 @@ const GalleryItems: FunctionComponent<Props> = ({data}) => {
         return (<p className="text-white font-mono font-bold mt-5">no cats to display. try adjusting page or per page count. happy viewing!</p>)
     }
 
-    console.log('debug: totalFillerCount', fillerItems.length)
   return (<>
       {(<div className={`grid grid-cols-1 lg:grid-cols-4 sm:grid-cols-2  gap-1 bg-white border-white border-4`}>
           {data.cats.map((cat) => <GalleryItem item={cat} key={cat.id}/>)}

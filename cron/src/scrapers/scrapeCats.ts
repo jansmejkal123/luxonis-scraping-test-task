@@ -25,7 +25,7 @@ const scrapeCats: Scraper<CatData> = async (domain, path, port)  => {
             value: '100',
             domain: domain
         })
-        console.log(`debug: going to ${URL}`)
+        console.log(`going to ${URL}`)
         // Go to site and wait for FE JS to load
         await page.goto(URL, {
             timeout: 40 * 1000,
@@ -49,7 +49,6 @@ const scrapeCats: Scraper<CatData> = async (domain, path, port)  => {
                 }
             });
         });
-        console.log('debug: exiting', results)
         return results;
     } catch (e) {
         console.error(e);

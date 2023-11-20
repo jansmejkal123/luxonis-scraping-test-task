@@ -12,7 +12,6 @@ const SCRAPED_PATH = process.env.SCRAPED_PATH || ``;
 const SCRAPED_PORT = process.env.SCRAPED_PORT ? parseInt(process.env.SCRAPED_PORT!) : undefined;
 
 cron.start(SCRAPED_DOMAIN, SCRAPED_PATH, SCRAPED_PORT,process.env.WAIT_FOR_SCHEDULED_SCRAPING==='false');
-console.log('debug: process.env.WAIT_FOR_SCHEDULED_SCRAPING', typeof process.env.WAIT_FOR_SCHEDULED_SCRAPING)
 app.get('/', (req, res: Response<string>) => {
   res.send('CRON SERVER IS UP');
 });
