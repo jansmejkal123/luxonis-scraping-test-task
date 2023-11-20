@@ -43,7 +43,7 @@ const PaginationContextProvider = ({children}: PaginationContextProviderProps) =
     const handleSetPerPage = useCallback<SetPerPageHandler>(async (perPage)=> {
         setPerPage(perPage);
         await replace({ query: { ...query, perPage } }, undefined, { shallow: true });
-    }, [perPage, replace, query])
+    }, [replace, query])
 
     return (<PaginationContext.Provider value={{page, setPage, perPage, setPerPage, handlePagination, totalCount, setTotalCount, pageDisplayValue, handleSetPerPage}}>
         {children}
