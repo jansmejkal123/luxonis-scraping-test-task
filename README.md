@@ -1,13 +1,18 @@
 # Luxonis scraping test task
 a job interview task for a full-stack JS development position at https://luxonis.com/
 
+It did not bring the job, because after 14 days of lively conversation and not getting any support with the issues I had (both technical and legal) the lady (who refused to tell her position at the company) ended the process up with 'We expected you to deliver within 10 days'. 
+
+I decided to create it without any restrictions anyways since the whole stack gave me a good opportunity to get my fingers wet with instruments I do not usually deal with.
+
 ## Original Assignment
 Scrape the first 500 items (title, image url) from sreality.cz (flats, sell - you can switch the web to English) and save it in the Postgresql database. Implement a simple HTTP server (or use Nginx) and show these 500 items on a nice page (with pagination) which will use your own design and put everything to single docker-compose command so that I can just run "docker-compose up" in the Github repository and see the scraped ads on http://127.0.0.1:8080 page. Use Typescript and React for implementation.
 ### Follow-up clarification
 - scraping can be both periodic and one-shot
 - database should be cleared up before each dataset inserted
 - public github repository is mandatory
-- the whole scraping can be done with a single request (did not answer my legal issues but pointed me to the trick of setting cookies before scraping)
+- single docker-compose file is mandatory
+- the whole scraping might be done with a single request (did not answer my legal issues but pointed me to the trick of setting cookies before scraping)
 
 ## Usage
 - rename .env files and fill accordingly
