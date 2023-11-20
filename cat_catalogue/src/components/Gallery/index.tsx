@@ -38,7 +38,7 @@ const Gallery: FunctionComponent<Props> = () => {
 
     useEffect(() => {
         refetch()
-    }, [cookies])
+    }, [cookies, refetch])
 
     return (<>
         {isLoading ? (
