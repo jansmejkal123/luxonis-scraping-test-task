@@ -54,7 +54,7 @@ services:
   browser:
     build:
       context: .
-      dockerfile: ./browser/Dockerfile2
+      dockerfile: ./browser/Dockerfile
     container_name: browser
 
     depends_on:
