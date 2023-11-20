@@ -34,7 +34,27 @@ services:
       - type: bind
         source: ./browser/src
         target: /app/src
-
+  cat_catalogue:
+    build:
+      context: ./cat_catalogue
+      dockerfile: Dockerfile-dev
+    container_name: cat_catalogue
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://cat_catalogue:3210" ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    env_file:
+      - .env.cat_catalogue
+    ports:
+      - "3210:3210"
+    volumes:
+      - type: bind
+        source: ./cat_catalogue/src
+        target: /app/src
+    networks:
+      - app-network
 networks:
   app-network:
     driver: bridge

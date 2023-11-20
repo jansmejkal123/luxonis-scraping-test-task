@@ -1,55 +1,68 @@
-##### DEPENDENCIES
+FROM node:18-alpine AS base
 
-FROM --platform=linux/amd64 node:16-alpine3.17 AS deps
-RUN apk add --no-cache libc6-compat openssl1.1-compat
+# Install dependencies only when needed
+FROM base AS deps
+# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+RUN apk add --no-cache libc6-compat
+
 WORKDIR /app
 
-COPY cron/prisma ./prisma
-COPY browser/package.json browser/package-lock.json ./
-COPY browser/next.config.mjs ./
-COPY browser/tsconfig.json ./
-COPY browser/tailwind.config.ts ./
-COPY browser/postcss.config.cjs ./
-
-RUN npm ci
-RUN prisma generate
-
-##### BUILDER
-
-FROM --platform=linux/amd64 node:16-alpine3.17 AS builder
-ARG DATABASE_URL
-ARG NEXT_PUBLIC_CLIENTVAR
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY browser/ .
-
-# ENV NEXT_TELEMETRY_DISABLED 1
+# Install dependencies based on the preferred package manager
+COPY browser/package*.json ./
+COPY /cron/prisma ./prisma
 
 RUN \
-  if [ -f package-lock.json ]; then SKIP_ENV_VALIDATION=1 npm run build; \
+  if [ -f package-lock.json ]; then npm ci; \
   else echo "Lockfile not found." && exit 1; \
   fi
+RUN yarn postinstall
 
-##### RUNNER
 
-FROM --platform=linux/amd64 node:16-alpine3.17 AS runner
+# Rebuild the source code only when needed
+FROM base AS builder
 WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY /browser .
+COPY --from=deps /app/prisma ./prisma
 
-ENV NODE_ENV production
-
+COPY .env.db .
+RUN mv .env.db .env.local
+# Next.js collects completely anonymous telemetry data about general usage.
+# Learn more here: https://nextjs.org/telemetry
+# Uncomment the following line in case you want to disable telemetry during the build.
 ENV NEXT_TELEMETRY_DISABLED 1
+
+
+RUN yarn build
+# If using npm comment out above and use below instead
+# RUN npm run build
+
+# Production image, copy all the files and run next
+FROM base AS runner
+WORKDIR /app
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/next.config.mjs ./
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/package.json ./package.json
 
+
+ENV NODE_ENV production
+# Uncomment the following line in case you want to disable telemetry during runtime.
+ENV NEXT_TELEMETRY_DISABLED 1
+
+
+
+
+# Automatically leverage output traces to reduce image size
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./
-
 USER nextjs
+
 EXPOSE 3000
+
 ENV PORT 3000
+# set hostname to localhost
+ENV HOSTNAME "0.0.0.0"
 
 CMD ["node", "server.js"]

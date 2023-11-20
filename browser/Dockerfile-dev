@@ -3,17 +3,10 @@ FROM node:18-alpine
 WORKDIR /app
 
 COPY cron/prisma ./prisma
-COPY browser/package*.json ./
-COPY browser/next.config.mjs ./
-COPY browser/tsconfig.json ./
-COPY browser/tailwind.config.ts ./
-COPY browser/postcss.config.cjs ./
-
-COPY browser/src ./src
-COPY browser/public ./public
+COPY browser/ ./
 
 RUN npm ci
-RUN npx prisma generate
+RUN npm run postinstall
 
 ENV NODE_ENV development
 

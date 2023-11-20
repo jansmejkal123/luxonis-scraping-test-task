@@ -4,6 +4,7 @@ WORKDIR /app
 COPY . /app
 
 RUN npm install
-
+RUN apk update && \
+    apk add curl
 EXPOSE 3210
 CMD ["npm","run","dev"]

@@ -17,38 +17,10 @@ services:
       interval: 10s
       timeout: 3s
       retries: 3
-  cron:
-    build:
-      context: ./cron
-      dockerfile: Dockerfile-dev
-    container_name: cron
-    image: cron
-    restart: always
-    stdin_open: true # docker run -i
-    tty: true        # docker run -t
-    env_file:
-      - .env.db
-      - .env.cron
-    networks:
-      - app-network
-    ports:
-      - "3000:3000"
-    volumes:
-      - type: bind
-        source: ./cron/src
-        target: /src
-      - type: bind
-        source: ./cron/prisma
-        target: /prisma
-    depends_on:
-      postgres:
-        condition: service_healthy
-      cat_catalogue:
-        condition: service_healthy
   cat_catalogue:
     build:
-      context: ./cat_catalogue
-      dockerfile: Dockerfile-dev
+      context: .
+      dockerfile: cat_catalogue/Dockerfile
     container_name: cat_catalogue
     restart: unless-stopped
     healthcheck:
@@ -56,37 +28,45 @@ services:
       interval: 10s
       timeout: 3s
       retries: 3
-    env_file:
-      - .env.cat_catalogue
     ports:
       - "3210:3210"
-    volumes:
-      - type: bind
-        source: ./cat_catalogue/src
-        target: /app/src
+    networks:
+      - app-network
+  cron:
+    build:
+      context: ./cron
+      dockerfile: Dockerfile
+    container_name: cron
+    image: cron
+    restart: always
+    env_file:
+      - .env.db
+      - .env.cron
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      cat_catalogue:
+        condition: service_healthy
     networks:
       - app-network
   browser:
     build:
       context: .
-      dockerfile: ./browser/Dockerfile-dev
-    env_file:
-      - .env.db
+      dockerfile: ./browser/Dockerfile2
+    container_name: browser
+
     depends_on:
       postgres:
         condition: service_healthy
     networks:
-      app-network:
+      - app-network
     ports:
       - "8080:3000"
-    volumes:
-      - type: bind
-        source: ./browser/src
-        target: /app/src
 networks:
   app-network:
     driver: bridge
-
 
 volumes:
   postgres-data:
