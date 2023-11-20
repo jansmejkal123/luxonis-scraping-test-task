@@ -23,7 +23,7 @@ const PerPageDropDown= () => {
 
     const selectHandler = useCallback((e: SyntheticEvent<HTMLSelectElement>) => {
         handleSetPerPage(parseInt(e.currentTarget.value, 10))
-    },[])
+    },[handleSetPerPage])
 
     return (<>
         <select onChange={selectHandler} value={perPage} className="text-sm text-white bg-[rgba(0,0,0,.1)] rounded">
