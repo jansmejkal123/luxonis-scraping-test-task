@@ -19,11 +19,11 @@ Scrape the first 500 items (title, image url) from sreality.cz (flats, sell - yo
  - `docker compose up` will start the production builds
 
 ## Issues I had
-1. I could not overcome the issue with quemu to succesfully build and run the scraper on Apple Silicon which is my dev machine
+1. I could not overcome the issue with qemu to succesfully build and run the scraper on Apple Silicon which is my dev machine (https://github.com/docker/for-mac/issues/6204, https://www.reddit.com/r/docker/comments/101gr93/m1_chip_qemu_uncaught_target_signal_11)
 2. Scraping sreality is considered copyright violation (the Luxonis company did not care at all about robots.txt rules and copyrighted content being scraped, saved and displayed; I asked Sreality.cz for a permission, which was not given for obvious reasons)
 
 ## Solutions I made
-1. Removing cron from the docker stack for the main part and testing/runnig it on amd64 architecture (my old laptop was not sufficient for the whole dev process since the builds took very very long to process)
+1. Removing cron from the docker stack for the main part and testing/runnig it on amd64 architecture (my old laptop was not sufficient for the whole dev process since the builds took very very long)
 2. Mocking my own pages that I could scrape - based on data from thecatapi.com. I went for the cookies approach to get as close as possible to the original assignment.
 
 ## Implications
